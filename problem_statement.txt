@@ -1,0 +1,70 @@
+Anomaly (or outlier) detection in medical imaging has certainly attracted 
+attention—but compared to “mainstream” vision tasks (like classification or
+segmentation), it remains a moderately explored niche, with most work concentrated
+ in a few areas and plenty of gaps elsewhere. Here’s why:
+
+1. Volume and Concentration of Research
+A 2021 mini-review analyzed 120 papers on unsupervised and semi-supervised
+ anomaly detection in medical imaging and found that most studies focus on brain MRI, 
+ with far fewer addressing chest X-rays, OCT, or retinal scans 
+arXiv
+.
+
+A 2024 comparative study benchmarked 30 methods across seven datasets and five 
+modalities—again heaviest on MRI—highlighting that robust, modality-agnostic 
+techniques are still lacking IET Research Journals
+.
+
+By contrast, classification and segmentation each have hundreds of dedicated papers 
+per modality per year, whereas anomaly detection publications number only in the 
+dozens annually, spread unevenly across tasks.
+
+2. Why It’s Under-Explored in Some Modalities
+Data Scarcity of “Purely Normal” Sets
+
+Anomaly detection requires large collections of only healthy images to model normality.
+Public repositories of normal chest X-rays or retinal OCT are smaller and less curated 
+than MRI archives, so many researchers default to MRI arXiv
+.
+
+Evaluation Challenges
+
+Without ground-truth labels for every possible anomaly, it’s hard to 
+quantitatively compare methods. Benchmarks (like Brain Tumor Segmentation) 
+provide clear labels; anomaly tasks do not.
+
+Algorithmic Difficulty
+
+Unsupervised methods (GANs, autoencoders, one-class SVMs) must capture the full 
+variability of health—far harder than discriminating between two known classes. 
+This extra complexity deters some researchers.
+
+3. Why MRI Became the “Hotspot”
+High-quality public datasets (e.g., BraTS for brain tumors) with standardized 
+protocols make research easier.
+
+Clear definitions of anomalies (tumors, lesions) allow straightforward evaluation.
+
+Consequently, the majority of deep-learning anomaly-detection papers focus here,
+ leaving modalities like chest X-ray or ophthalmology ripe for contribution 
+arXiv
+.
+
+4. Opportunities in Less-Studied Areas
+Chest X-ray & Retinal OCT: fewer dedicated unsupervised benchmarks; huge real-world 
+impact.
+
+Histopathology & Ultrasound: highly variable and data-scarce modalities where normal
+ vs. abnormal is nuanced.
+
+Cross-modality methods: building truly general anomaly detectors that work across
+ MRI, X-ray, OCT would be novel.
+
+Bottom Line
+While anomaly detection in medical imaging has grown steadily—and several strong 
+surveys and methods now exist—the 
+field is still far from saturated, especially outside brain MRI. The combination 
+of data scarcity, evaluation hurdles, 
+and algorithmic complexity means many modalities and techniques remain
+ under-researched, offering you a real chance
+to make novel contributions without needing massive compute resources.

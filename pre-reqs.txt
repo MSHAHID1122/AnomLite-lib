@@ -1,0 +1,125 @@
+🧠 1. Mathematics & Theory
+These are essential for understanding anomaly detection and building efficient models:
+
+✅ Must Know:
+Linear Algebra: Vectors, matrices, eigenvalues, PCA, SVD.
+
+Probability & Statistics: Gaussian distribution, z-scores, KL divergence, mean/variance.
+
+Optimization: Gradient descent, loss functions, regularization.
+
+Information Theory (optional but helpful): Entropy, mutual information.
+
+✅ Good to Understand:
+Signal Processing: Especially 2D filters, convolution, edge detection.
+
+Manifold Learning (optional): t-SNE, UMAP (for visualization or clustering).
+
+💻 2. Programming Skills
+✅ Python (Main Language)
+NumPy, Pandas: For array ops and data processing.
+
+Matplotlib, Seaborn: For visualization.
+
+scikit-learn: For SVMs, PCA, evaluation metrics.
+
+OpenCV / PIL: For image processing.
+
+PyTorch or TensorFlow (lightweight use): For building autoencoders or neural models.
+
+logging, argparse, typing: For clean code structure.
+
+✅ C/C++ (for performance-critical modules)
+Basic syntax, memory management.
+
+How to create Python bindings using:
+
+Cython
+
+Pybind11
+
+ctypes (lower level)
+
+🧬 3. Machine Learning & Deep Learning
+✅ Core ML Concepts:
+Supervised vs Unsupervised Learning
+
+Anomaly Detection (One-class SVM, Isolation Forest, etc.)
+
+Clustering (K-Means, DBSCAN)
+
+✅ Deep Learning (lightweight use only):
+Autoencoders (basic, convolutional)
+
+Reconstruction error analysis
+
+Contrastive learning basics (e.g., SimCLR if doing patch-based contrast)
+
+🖼️ 4. Computer Vision Basics
+Image formats & preprocessing
+
+Histogram equalization, normalization, resizing
+
+Patch extraction and feature comparison
+
+Texture features (GLCM, LBP, Haralick)
+
+📚 5. Scientific Tools & Data
+Familiarity with image datasets like:
+
+NIH Chest X-ray
+
+DRIVE (retinal)
+
+DDSM (breast cancer mammograms)
+
+Reading papers on unsupervised anomaly detection
+
+arXiv, IEEE, NeurIPS, MICCAI
+
+🧰 6. Software Engineering Skills
+Virtual Environments (venv, conda)
+
+Code Structuring (modular design)
+
+Testing (pytest)
+
+Version Control (Git + GitHub)
+
+Documentation (README, docstrings, MkDocs/Sphinx)
+
+📦 7. Packaging & Distribution
+Building your library as a Python package (setup.py)
+
+Writing a requirements.txt or pyproject.toml
+
+Creating a CLI (argparse, click)
+
+Possibly distributing on PyPI later
+
+🧪 8. Evaluation Metrics & Analysis
+AUC-ROC, Precision-Recall, F1 Score
+
+Confusion Matrix
+
+Visualization of anomaly maps (heatmaps)
+
+Threshold optimization techniques
+
+✅ Bonus (for future scaling):
+Docker (for reproducible environments)
+
+FastAPI or Flask (if you want an API later)
+
+React or Streamlit (if you want a simple front-end demo)
+
+🚀 Summary Checklist
+Area	Skill Level Needed
+Linear Algebra & Stats	✅ Solid Foundation
+Python & Libraries	✅ Intermediate
+Deep Learning (Autoencoders)	✅ Basic
+Image Processing	✅ Intermediate
+Software Structuring	✅ Intermediate
+C/C++ + Python Binding	🔸 Optional (for performance)
+Web Frameworks (React/Django)	🔸 Only if making a GUI/API
+Version Control	✅ Essential

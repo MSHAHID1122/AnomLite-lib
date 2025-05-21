@@ -1,0 +1,26 @@
+Phase 1: No Deep Learning (yet)
+Build classic models:
+
+PCA-based anomaly detector
+
+One-class SVM
+
+Statistical texture comparison (histograms, entropy)
+
+Patch-level scoring using similarity to normal patches
+
+Use this to bootstrap your library.
+
+Phase 2: Shallow CNN (your own, custom)
+Build a shallow convolutional autoencoder in Python + C++:
+
+2–3 convolutional layers
+
+1–2 fully connected layers
+
+No need for batchnorm, dropout, or advanced stuff yet.
+
+Train on small datasets (healthy-only images) using your CPU.
+
+Phase 3: Optional PyTorch Integration (for bigger models)
+Later, allow users to plug in pretrained PyTorch models, if they want GPU power.

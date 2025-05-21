@@ -1,0 +1,130 @@
+Project Root Structure
+bash
+Copy
+Edit
+anomaly_detect_lib/
+│
+├── anomaly_detect/            # 🧠 Core library logic
+│   ├── __init__.py
+│   ├── preprocessing/         # 🧼 Image cleaning and normalization
+│   ├── features/              # 🎯 Feature extraction (patches, stats)
+│   ├── models/                # 🧠 Autoencoders, atlas-based, etc.
+│   ├── detection/             # 🚨 Anomaly scoring and thresholding
+│   ├── utils/                 # 🛠️ Helpers: I/O, logging, metrics
+│   └── config/                # ⚙️ Config files and constants
+│
+├── tests/                     # ✅ Unit tests for modules
+│   └── ...                    # Each submodule should have test files
+│
+├── examples/                  # 📊 Example usage scripts and notebooks
+│   └── chest_xray_demo.ipynb
+│
+├── docs/                      # 📘 Markdown docs or Sphinx site
+│   └── architecture.md
+│
+├── requirements.txt           # 📦 Dependencies
+├── setup.py                   # 📦 Packaging setup
+├── README.md                  # 🧾 Intro + usage
+└── .gitignore
+📁 anomaly_detect/ – Core Library
+🧼 preprocessing/
+resize.py: Resize input images to consistent shapes
+
+normalize.py: Normalize pixel intensities
+
+patchify.py: Break images into patches (used for patch-based methods)
+
+🎯 features/
+texture_features.py: Extract texture/stats features (GLCM, entropy, etc.)
+
+pca_features.py: Use PCA or SVD for dimensionality reduction
+
+cnn_features.py: Light CNNs or pretrained model feature extraction
+
+🧠 models/
+autoencoder.py: Shallow autoencoders using PyTorch or NumPy
+
+atlas_model.py: Implements atlas-based comparison (e.g., mean difference)
+
+contrastive_model.py: Patch-level contrastive loss model
+
+oc_svm.py: One-class SVM implementation on features
+
+🚨 detection/
+score.py: Scoring test images based on reconstruction error / distance
+
+threshold.py: Finds optimal threshold for decision
+
+visualize.py: Generates heatmaps or overlay of anomalies
+
+🛠️ utils/
+logger.py: Logging utility
+
+metrics.py: AUC, ROC, precision-recall calculations
+
+io.py: Load/save images, datasets, models
+
+plot.py: Custom plots for recon error or score distribution
+
+⚙️ config/
+defaults.py: Default hyperparameters and settings
+
+paths.py: Dataset/model path definitions
+
+📁 tests/
+test_autoencoder.py: Unit tests for training & inference
+
+test_features.py: Verifies PCA/GLCM/etc. correctness
+
+test_threshold.py: Ensures detection thresholds work properly
+
+📁 examples/
+chest_xray_demo.ipynb: Full pipeline from loading data to anomaly detection and visualization
+
+retinal_scan_demo.py: Sample pipeline for retinal dataset
+
+📁 docs/
+architecture.md: Design principles, model comparisons, scalability notes
+
+contributing.md: Guide for open-source contributions (optional)
+
+model_notes.md: Notes on model design choices and references
+
+📄 README.md
+Your landing page:
+
+Project goals
+
+Supported methods
+
+How to install
+
+Basic usage example
+
+Dataset references
+
+📄 setup.py
+Python packaging config to install with pip install -e .
+
+📄 requirements.txt
+Typical contents:
+
+txt
+Copy
+Edit
+numpy
+scikit-learn
+opencv-python
+matplotlib
+pillow
+torch    # or use CPU-only PyTorch version
+✅ Best Practices
+Use modular functions with docstrings
+
+Add type hints for better readability and tooling
+
+Write unit tests as you build
+
+Include logging/debugging where needed
+
+Structure for CPU-first, but keep it extensible to GPU later

@@ -14,7 +14,6 @@ A 2024 comparative study benchmarked 30 methods across seven datasets and five
 modalities—again heaviest on MRI—highlighting that robust, modality-agnostic 
 techniques are still lacking IET Research Journals
 .
-
 By contrast, classification and segmentation each have hundreds of dedicated papers 
 per modality per year, whereas anomaly detection publications number only in the 
 dozens annually, spread unevenly across tasks.

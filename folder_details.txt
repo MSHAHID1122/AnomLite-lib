@@ -1,224 +1,110 @@
-1. .github/
-Purpose: Automate workflows and streamline collaboration.
+README.md
 
-workflows/tests.yml: Runs unit/integration tests on every pull request.
+Provides:
 
-yaml
-name: Tests
-on: [pull_request]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
-      - run: pip install -r requirements.txt
-      - run: pytest tests/
-workflows/publish.yml: Auto-publishes the library to PyPI when a new release is tagged.
+Project overview and motivation.
 
-2. configs/
-Purpose: Store modality-specific configurations (prevents hardcoding).
+Installation steps (pip install, dev requirements).
 
-mri.yaml: Example MRI training config:
+Quickstart code snippets demonstrating a simple anomaly detection run.
 
-yaml
-data:
-  modality: "MRI"
-  path: "./data/mri/normal"
-  volume_dims: [128, 128, 64]  # 3D MRI volume size
-model:
-  type: "autoencoder"
-  latent_dim: 256
-training:
-  epochs: 100
-  batch_size: 8
-  lr: 1e-4
-chest_xray.yaml, oct.yaml: Similar structure for X-ray/OCT hyperparameters.
+Links to documentation, configuration guide, and contribution workflow.
 
-3. data/
-Purpose: Handle medical imaging data loading, augmentation, and synthetic anomaly generation.
+setup.py & requirements.txt
 
-loaders/
-dicom_loader.py: Load DICOM files (common for X-rays/CT):
+setup.py: Defines package metadata (name, version, author) and entry points for console scripts.
 
-python
-import pydicom
+requirements.txt: Pin versions of critical libraries (numpy, scipy, scikit-learn, pydicom, matplotlib) for reproducible installs.
 
-def load_dicom_series(folder):
-    slices = [pydicom.dcmread(f) for f in sorted(os.listdir(folder))]
-    return np.stack([s.pixel_array for s in slices])
-nifti_loader.py: Load 3D NIfTI MRI volumes using nibabel.
+.gitignore
 
-oct_loader.py: Read retinal OCT volumetric data.
+Specifies patterns to exclude from Git (e.g., __pycache__/, .ipynb_checkpoints/, large raw data directories).
 
-transforms/
-spatial.py: 3D augmentations for MRI/OCT:
+config/
 
-python
-from monai.transforms import RandAffine
+Centralized configuration folder containing:
 
-class Random3DRotation:
-    def __call__(self, img):
-        return RandAffine(rotate_range=np.pi/4)(img)
-intensity.py: Modality-specific normalization (e.g., Hounsfield units for CT).
+default.yaml: YAML file for default hyperparameters (PCA variance ratio, OCSVM ν, patch sizes), data paths, and output directories.
 
-synthetic/
-tumors.py: Add synthetic lesions to MRI volumes.
+Users can override or extend these settings without modifying code.
 
-artifacts.py: Simulate MRI motion blur or X-ray noise.
+data/
 
-4. models/
-Purpose: Implement anomaly detection architectures.
+sample/: A handful of anonymized normal chest X-ray DICOM files for smoke testing and tutorials.
 
-autoencoders/
-vanilla_ae.py: Basic autoencoder for reconstruction-based anomaly detection.
+download_data.py: Automates downloading and organizing public datasets (e.g., MIMIC-CXR subsets) under structured folders (data/raw/, data/processed/).
 
-vae.py: Variational autoencoder with KL divergence loss.
+notebooks/
 
-transformer_ae.py: Vision Transformer-based AE for 3D volumes.
+Contains Jupyter notebooks for interactive exploration and quick prototyping:
 
-gan_based/
-anogan.py: AnoGAN implementation for MRI:
+01_pca_detection.ipynb: Walkthrough of PCA training and reconstruction error visualization.
 
-python
-class AnoGAN(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.generator = Generator()  # Trained on normal data
-        self.discriminator = Discriminator()
-one_class/
-deep_svdd.py: Deep Support Vector Data Description:
+02_ocsvm_detection.ipynb: Demonstration of feature extraction, One-Class SVM fitting, and anomaly scoring.
 
-python
-class DeepSVDD(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.encoder = ResNet18()
-        self.center = torch.randn(128)  # Hypersphere center
-utils/
-layers.py: Custom 3D convolutions for medical volumes.
+03_texture_patch_demo.ipynb: Examples of histogram/entropy comparisons and patch-based scoring with heatmap outputs.
 
-pretrained.py: Load models pretrained on MONAI or BraTS.
+chest_xray_anomaly/
 
-5. evaluation/
-Purpose: Benchmark models and compute metrics.
+Primary package directory with the following submodules:
 
-metrics/
-roc_auc.py: Compute image-level ROC-AUC:
+base.py
+Defines the abstract class AnomalyDetector with standardized methods:
 
-python
-from sklearn.metrics import roc_auc_score
+fit(self, X_normal): Train on normal data.
 
-def compute_auc(scores, labels):
-    return roc_auc_score(labels, scores)
-dice_uncertainty.py: Pixel-level Dice score if anomaly masks exist.
+score(self, X_test): Produce anomaly scores or maps for test data.
 
-benchmarks/
-brats.py: Compare with BraTS tumor detection SOTA.
+preprocessing/
 
-cxr_benchmark.py: Custom benchmark for chest X-ray anomaly detection.
+dicom_loader.py: Functions to read DICOM files, extract pixel arrays, and handle metadata normalization.
 
-6. training/
-Purpose: Training pipelines for unsupervised/self-supervised learning.
+image_transforms.py: Utilities for resizing, intensity normalization, histogram equalization.
 
-engines/
-unsupervised_trainer.py: Train autoencoders:
+patch_extractor.py: Logic for extracting fixed-size patches (e.g., 32×32) with optional overlap.
 
-python
-def train_ae(model, dataloader, epochs):
-    for epoch in range(epochs):
-        for batch in dataloader:
-            reconstruction = model(batch)
-            loss = F.mse_loss(reconstruction, batch)
-            loss.backward()
-self_supervised.py: Masked image modeling for pretraining.
+detectors/
+Encapsulates each classical anomaly detection algorithm:
+
+pca_detector.py: Fits PCA on flattened image vectors; computes reconstruction errors as anomaly scores.
+
+ocsvm_detector.py: Implements One-Class SVM with RBF kernel on raw pixels or transformed features.
+
+texture_detector.py: Compares global histograms or entropy measures against a baseline distribution.
+
+patch_detector.py: Builds a library of normal patches; measures similarity (SSIM, Euclidean) for each test patch.
 
 utils/
-losses.py: Custom losses (e.g., perceptual loss using VGG).
 
-schedulers.py: Learning rate schedulers for medical data.
+metrics.py: Functions to compute ROC AUC, precision-recall metrics, and threshold calibration strategies.
 
-7. inference/
-Purpose: Deploy models to clinical settings.
+visualization.py: Routines to overlay anomaly heatmaps on original X-ray images and save visual outputs.
 
-deploy.py: Export to ONNX/TorchScript for PACS integration.
+logger.py: Sets up a consistent logging format and log-level controls for debugging and audit trails.
 
-saliency.py: Generate Grad-CAM heatmaps for clinician explainability.
+examples/
+Standalone Python scripts that demonstrate typical usage patterns for each detector:
 
-pacs_integration/: DICOM integration tools (optional).
+run_pca.py: End-to-end example loading sample data, training PCA, scoring anomalies, and plotting results.
 
-8. visualization/
-Purpose: Visualize anomalies for clinical reports.
+run_ocsvm.py: Similar workflow for One-Class SVM.
 
-volume_slicer.py: Plot interactive 3D anomaly heatmaps (e.g., using plotly).
+visualize_results.py: Utility to load saved score maps and generate comparative visualizations.
 
-grad_cam.py: Highlight regions influencing anomaly predictions.
+scripts/
 
-9. utils/
-Purpose: General utilities.
+Convenience shell scripts for development workflows:
 
-logger.py: Track experiments with WandB/MLFlow.
+test_all.sh: Runs the entire pytest suite and the notebooks (via nbconvert) to ensure examples remain functional.
 
-data_utils.py: Patch extraction for whole-slide histopathology images.
+lint.sh: Executes linters (flake8, isort) and optionally formatters (black) to enforce code style consistency.
 
-experiment_tracking/: Save hyperparameters and results.
+tests/
 
-10. tests/
-Purpose: Ensure code reliability.
+Pytest-based unit tests covering:
 
-test_data_loaders.py: Validate DICOM/NIfTI loading.
+DICOM Loader Tests: Verify that known DICOM samples load correctly into expected array shapes.
 
-test_autoencoders.py: Test reconstruction error calculations.
+Detector Tests: Ensure each detector’s fit() and score() methods execute without errors and return properly shaped outputs.
 
-11. docs/
-Purpose: Onboard users and developers.
-
-tutorials/chest_xray_anomaly.ipynb: Step-by-step guide for X-ray anomaly detection.
-
-clinical_setup.md: Instructions for hospital deployment.
-
-12. scripts/
-Purpose: Helper scripts for common tasks.
-
-train.py: Launch training from CLI:
-
-python
-if __name__ == "__main__":
-    model = VanillaAE()
-    train_loader = load_data(config="configs/mri.yaml")
-    trainer = UnsupervisedTrainer(model)
-    trainer.fit(train_loader)
-13. cython_extensions/
-Purpose: Optimize performance-critical code.
-
-histogram_utils.pyx: Accelerate anomaly scoring:
-
-cython
-cdef float entropy(float[::1] histogram):
-    cdef float e = 0.0
-    for i in range(histogram.shape[0]):
-        e += histogram[i] * log2(histogram[i])
-    return -e
-14. Root Files
-requirements.txt:
-
-text
-torch>=2.0.0
-monai>=1.3.0
-nibabel
-pydicom
-scikit-learn
-setup.py: Package installation script.
-
-README.md: Overview, installation, and quickstart examples.
-
-Key Design Philosophy
-Modularity: Each folder addresses a specific concern (data, models, evaluation).
-
-Modality-Agnostic: Configs and loaders support MRI, X-ray, OCT, etc.
-
-Clinician-Friendly: Visualization and explainability tools bridge the gap to real-world use.
-
-Scalability: CI/CD and experiment tracking enable collaborative development.
+Utility Tests: Check metric computations and visualization routines produce expected data structures.
